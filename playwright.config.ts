@@ -15,6 +15,12 @@ export default defineConfig({
   testDir: './tests',
   /* Run tests in files in parallel */
   fullyParallel: true,
+  timeout: 60_000, // ⏱️ Max time for a single test
+
+  expect: {
+    timeout: 10_000, // ⏱️ Max wait for expect() assertions
+  },
+
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
   /* Retry on CI only */
@@ -29,44 +35,65 @@ export default defineConfig({
     // baseURL: 'http://localhost:3000',
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
+    actionTimeout: 30_000, // ⏱️ Max time for actions (click, fill, etc.)
+    navigationTimeout: 30_000, // ⏱️ Max time for page navigation
     trace: 'on-first-retry',
+    headless: false,
+    viewport: null,
+
+    screenshot: 'only-on-failure',
+    video: 'retain-on-failure',
+
+    launchOptions: {
+      args: ['--start-maximized'],
+    },
   },
 
   /* Configure projects for major browsers */
   projects: [
-    {
-      name: 'data-setup',
-      testMatch: /.*data-load.setup.ts/,
-      teardown: 'data-cleanup',
-    },
-
-    {
-      name: 'data-cleanup',
-      testMatch: /.*data-cleanup.setup.ts/
-    },
-
-    {
-      name: 'smoke',
-      use: { 
-        ...devices['Desktop Chrome'], 
-        viewport: { width: 1280, height: 720 } 
-      },
-      testMatch: /.*smoke.spec.ts/,
-      dependencies: ['data-setup'],
-      fullyParallel: false,
-    },
-
-    {
-      name: 'regression',
-      use: { ...devices['Desktop Firefox'] },
-      testIgnore: /.*smoke.spec.ts/,
-      dependencies: ['smoke'],
-    },
+    // {
+    //   name: 'data-setup',
+    //   testMatch: /.*data-load.setup.ts/,
+    //   teardown: 'data-cleanup',
+    // },
 
     // {
-    //   name: 'webkit',
-    //   use: { ...devices['Desktop Safari'] },
+    //   name: 'data-cleanup',
+    //   testMatch: /.*data-cleanup.setup.ts/
     // },
+
+    // {
+    //   name: 'smoke',
+    //   use: { 
+    //     ...devices['Desktop Chrome'], 
+    //     viewport: { width: 1280, height: 720 } 
+    //   },
+    //   testMatch: /.*smoke.spec.ts/,
+    //   dependencies: ['data-setup'],
+    //   fullyParallel: false,
+    // },
+
+    // {
+    //   name: 'regression',
+    //   use: { ...devices['Desktop Firefox'] },
+    //   testIgnore: /.*smoke.spec.ts/,
+    //   dependencies: ['smoke'],
+    // },
+
+    {
+      name: 'chromium',
+      use: {...devices['Desktop Chrome']},
+    },
+
+    {
+      name: 'firefox',
+      use: { ...devices['Desktop Firefox'] },
+    },
+
+    {
+      name: 'webkit',
+      use: { ...devices['Desktop Safari'] },
+    },
 
 
 
