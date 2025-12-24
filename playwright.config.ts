@@ -24,10 +24,14 @@ export default defineConfig({
   },
 
   projects: [
+
+    { name: 'setup', testMatch: /.*\.setup\.ts/ },
+    
     {
       name: 'chromium',
       use: {
         ...devices['Desktop Chrome'],
+        storageState: 'playwright/.auth/user.json',
         viewport: null,             
         deviceScaleFactor: undefined,
         isMobile: false,
@@ -36,6 +40,7 @@ export default defineConfig({
           args: ['--start-maximized'], 
         },
       },
+       dependencies: ['setup'],
     },
 
     {
