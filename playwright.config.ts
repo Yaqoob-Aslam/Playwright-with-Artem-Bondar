@@ -1,16 +1,5 @@
 import { defineConfig, devices } from '@playwright/test';
 
-/**
- * Read environment variables from file.
- * https://github.com/motdotla/dotenv
- */
-// import dotenv from 'dotenv';
-// import path from 'path';
-// dotenv.config({ path: path.resolve(__dirname, '.env') });
-
-/**
- * See https://playwright.dev/docs/test-configuration.
- */
 export default defineConfig({
   testDir: './tests',
   /* Run tests in files in parallel */
@@ -32,98 +21,69 @@ export default defineConfig({
   reporter: 'html',
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
-    /* Base URL to use in actions like `await page.goto('')`. */
-    // baseURL: 'http://localhost:3000',
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     actionTimeout: 30_000, // ⏱️ Max time for actions (click, fill, etc.)
     navigationTimeout: 30_000, // ⏱️ Max time for page navigation
     trace: 'on-first-retry',
-    headless: false,
-    viewport: null,
+    // headless: false,
+    // viewport: null,
 
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
 
-    launchOptions: {
-      args: ['--start-maximized'],
+    // launchOptions: {
+    //   args: ['--start-maximized'],
+    // },
+  },
+
+  /* Configure projects for major browsers */
+projects: [
+  {
+    name: 'chromium',
+    use: {
+      ...devices['Desktop Chrome'],
+      viewport: null,          // maximize
+      deviceScaleFactor: undefined, // remove device scale factor
+      isMobile: false,         // ensure desktop mode
+      launchOptions: {
+        headless: false,
+        args: ['--start-maximized'], // works for Chromium
+
+      },
     },
   },
 
-
-  /* Configure projects for major browsers */
-  projects: [
-    // {
-    //   name: 'data-setup',
-    //   testMatch: /.*data-load.setup.ts/,
-    //   teardown: 'data-cleanup',
-    // },
-
-    // {
-    //   name: 'data-cleanup',
-    //   testMatch: /.*data-cleanup.setup.ts/
-    // },
-
-    // {
-    //   name: 'smoke',
-    //   use: { 
-    //     ...devices['Desktop Chrome'], 
-    //     viewport: { width: 1280, height: 720 } 
-    //   },
-    //   testMatch: /.*smoke.spec.ts/,
-    //   dependencies: ['data-setup'],
-    //   fullyParallel: false,
-    // },
-
-    // {
-    //   name: 'regression',
-    //   use: { ...devices['Desktop Firefox'] },
-    //   testIgnore: /.*smoke.spec.ts/,
-    //   dependencies: ['smoke'],
-    // },
-
-    {
-      name: 'chromium',
-      use: {...devices['Desktop Chrome']},
+{
+  name: 'firefox',
+  use: {
+    ...devices['Desktop Firefox'],
+    viewport: null,  // Full window control
+    deviceScaleFactor: undefined,
+    isMobile: false,
+    launchOptions: {
+      headless: false,
+      args: [
+        '--width=3840',   // Huge width (tera screen size daal, jaise 1920 ya 2560)
+        '--height=2160',  // Huge height (maximize jaisa lagega)
+        // Ya screen size ke hisab se badhao, Firefox auto-adjust nahi karta lekin bada khulega
+      ],
     },
+  },
+},
 
-    {
-      name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
+{
+    name: 'webkit',
+    use: {
+      ...devices['Desktop Safari'],
+      viewport: null,
+      deviceScaleFactor: undefined,
+      isMobile: false,
+      launchOptions: {
+        headless: false,
+      },
     },
+  },
+],
 
-    {
-      name: 'webkit',
-      use: { ...devices['Desktop Safari'] },
-    },
-
-
-
-    /* Test against mobile viewports. */
-    // {
-    //   name: 'Mobile Chrome',
-    //   use: { ...devices['Pixel 5'] },
-    // },
-    // {
-    //   name: 'Mobile Safari',
-    //   use: { ...devices['iPhone 12'] },
-    // },
-
-    /* Test against branded browsers. */
-    // {
-    //   name: 'Microsoft Edge',
-    //   use: { ...devices['Desktop Edge'], channel: 'msedge' },
-    // },
-    // {
-    //   name: 'Google Chrome',
-    //   use: { ...devices['Desktop Chrome'], channel: 'chrome' },
-    // },
-  ],
-
-  /* Run your local dev server before starting the tests */
-  // webServer: {
-  //   command: 'npm run start',
-  //   url: 'http://localhost:3000',
-  //   reuseExistingServer: !process.env.CI,
-  // },
 });
