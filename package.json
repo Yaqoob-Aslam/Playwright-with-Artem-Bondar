@@ -9,6 +9,12 @@
   "license": "ISC",
   "devDependencies": {
     "@playwright/test": "^1.57.0",
-    "@types/node": "^25.0.3"
+    "@types/node": "^25.0.3",
+    "@types/pdf-parse": "^1.1.5"
+  },
+  "dependencies": {
+    "dommatrix": "^1.0.3",
+    "node-fetch": "^3.3.2",
+    "pdf-parse": "^1.1.1"
   }
 }
