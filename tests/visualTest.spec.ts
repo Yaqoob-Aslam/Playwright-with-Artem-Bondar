@@ -12,7 +12,7 @@ test('Visual Testing', async ({ page }) => {
   await selectedOption.check();
 
   await page.waitForLoadState('networkidle');
-  await expect(usingFormGrid).toHaveScreenshot({ maxDiffPixels: 250 });
+  await expect(usingFormGrid).toHaveScreenshot();
 
   // await page.pause();
 });

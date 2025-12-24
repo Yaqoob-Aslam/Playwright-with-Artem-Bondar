@@ -19,6 +19,7 @@ export default defineConfig({
 
   expect: {
     timeout: 10_000, // ⏱️ Max wait for expect() assertions
+    toHaveScreenshot: {maxDiffPixels: 250 },
   },
 
   /* Fail the build on CI if you accidentally left test.only in the source code. */
@@ -48,6 +49,7 @@ export default defineConfig({
       args: ['--start-maximized'],
     },
   },
+
 
   /* Configure projects for major browsers */
   projects: [
