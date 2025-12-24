@@ -1,26 +1,20 @@
 import { test, expect } from '@playwright/test';
 import * as XLSX from 'xlsx';
 import path from 'path';
-
-
+import { Credential } from '../types/credentials.interface';  // Clean import
 const userDataFile = path.join(__dirname, '../data/credentials.xlsx');
 
 
-test('Login to application', async ({ page }) => {
-  
-  interface credentials {
-    email: string;
-    password: string;
-  }
-  
-  const workbook = XLSX.readFile(userDataFile);
-  const worksheet = workbook.Sheets["credentials"];
-  const xlsxToJson = XLSX.utils.sheet_to_json<credentials>(worksheet);
-//   console.log(xlsxToJson);
+const workbook = XLSX.readFile(userDataFile);
+const worksheet = workbook.Sheets[workbook.SheetNames[0]]; // Automatically takes the first sheet
+const credentials: Credential[] = XLSX.utils.sheet_to_json(worksheet);
 
-  await page.goto('https://conduit.bondaracademy.com/');
-  await page.getByRole('link', { name: 'Sign in' }).click();
-  await page.getByRole('textbox', { name: 'Email' }).fill(`${xlsxToJson[0].email}`);
-  await page.getByRole('textbox', { name: 'Password' }).fill(`${xlsxToJson[0].password}`);
-  await page.getByRole('button', { name: 'Sign in' }).click();
+credentials.forEach((cred, index) => {
+  test(`Login to application with user ${index + 1}: ${cred.email}`, async ({ page }) => {
+    await page.goto('https://conduit.bondaracademy.com/');
+    await page.getByRole('link', { name: 'Sign in' }).click();
+    await page.getByRole('textbox', { name: 'Email' }).fill(cred.email);
+    await page.getByRole('textbox', { name: 'Password' }).fill(cred.password);
+    await page.getByRole('button', { name: 'Sign in' }).click();
+  });
 });

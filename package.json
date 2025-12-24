@@ -10,7 +10,8 @@
   "devDependencies": {
     "@playwright/test": "^1.57.0",
     "@types/node": "^25.0.3",
-    "@types/pdf-parse": "^1.1.5"
+    "@types/pdf-parse": "^1.1.5",
+    "@types/xlsx": "^0.0.36"
   },
   "dependencies": {
     "dommatrix": "^1.0.3",
