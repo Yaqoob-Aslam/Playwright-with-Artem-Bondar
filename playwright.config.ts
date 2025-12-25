@@ -25,13 +25,16 @@ export default defineConfig({
 
   projects: [
 
-    { name: 'setup', testMatch: /.*\.setup\.ts/ },
+    { 
+      name: 'setup',
+      testMatch: /auth\.setup\.ts/,
+    },
     
     {
       name: 'chromium',
       use: {
         ...devices['Desktop Chrome'],
-        storageState: 'playwright/.auth/user.json',
+        storageState: 'playwright/.auth/user.json', // Use saved auth
         viewport: null,             
         deviceScaleFactor: undefined,
         isMobile: false,
